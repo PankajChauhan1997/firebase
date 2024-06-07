@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "851645174246",
+    "project_id": "fire-d2329",
+    "storage_bucket": "fire-d2329.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851645174246:android:3582786b9e77c651304627",
+        "android_client_info": {
+          "package_name": "com.example.pankaj_fires"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Va87yXtvMcIs1u0NrtUh4T5S_M3DS84"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:pankaj_fires/view/signupView.dart';
+
+class HomeController extends GetxController {
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Get.offAll(SignUp());
+  }
+}
