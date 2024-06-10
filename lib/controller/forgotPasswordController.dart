@@ -9,16 +9,24 @@ class ForgotPasswordController extends GetxController {
   @override
   Future<void> forgotpass() async {
     try {
-      print('Attempting to send password reset email...');
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: resetpassword.text);
-      Get.snackbar("Success",
-          "Password reset link successfully sent to your registered email");
-      resetpassword.clear();
-      Get.to(() => logIn());
-      print('Password reset email sent successfully.');
+      if (resetpassword.text == null || resetpassword.text.isEmpty) {
+        Get.snackbar("Failed", "Please enter your email address",
+            colorText: Colors.white, backgroundColor: Colors.red);
+      } else {
+        print('Attempting to send password reset email...');
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: resetpassword.text);
+        Get.snackbar("Success",
+            "Password reset link successfully sent to your registered email",
+            colorText: Colors.white, backgroundColor: Colors.green);
+        resetpassword.clear();
+        Get.to(() => logIn());
+        print('Password reset email sent successfully.');
+      }
     } catch (e) {
       print('Failed to send password reset email: $e');
+      Get.snackbar("Failed", "Please enter correct email address $e",
+          colorText: Colors.white, backgroundColor: Colors.red);
     }
   }
 

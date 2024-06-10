@@ -11,7 +11,9 @@ class SignupController extends GetxController {
 
   @override
   void onInit() {
+    // checkAuthState();
     super.onInit();
+    checkAuthState();
   }
 
   checkAuthState() async {
@@ -32,6 +34,8 @@ class SignupController extends GetxController {
     try {
       if (idController.text.isEmpty || passController.text.isEmpty) {
         print("Email and Password can not be null");
+        Get.snackbar("Failed", "Please enter both Email and Password",
+            colorText: Colors.white, backgroundColor: Colors.red);
         return;
       }
       UserCredential signup = await FirebaseAuth.instance
@@ -39,18 +43,22 @@ class SignupController extends GetxController {
               email: idController.text, password: passController.text);
       User? user = signup.user;
       if (user != null && user.emailVerified) {
-        Get.snackbar("Success", "Please login with your email and password",
-            snackPosition: SnackPosition.BOTTOM);
         checkAuthState();
         Get.to(() => logIn());
       } else {
         user?.sendEmailVerification();
-        Get.snackbar("Success signed up",
-            "Please verify account,Verification email has been sent",
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+            "Success", "Please verify account,Verification email has been sent",
+            colorText: Colors.white, backgroundColor: Colors.green);
+        Get.to(() => logIn());
+        idController.clear();
+        passController.clear();
       }
     } catch (e) {
       print("Error occured while signup  ${e}");
+      Get.snackbar(
+          "Failed", "Please try another email address this is already taken",
+          colorText: Colors.white, backgroundColor: Colors.red);
     }
   }
 

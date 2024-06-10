@@ -16,15 +16,21 @@ class loginController extends GetxController {
     try {
       if (email.text.isEmpty || password.text.isEmpty) {
         print("Please enter both the fields");
+        Get.snackbar("Failed", "Please enter both the fields",
+            colorText: Colors.white, backgroundColor: Colors.red);
         return;
       }
       UserCredential signIn = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: email.text, password: password.text);
-      Get.snackbar("Success", "User signed in successfully");
-
+      Get.snackbar("Success", "User signed in successfully",
+          colorText: Colors.white, backgroundColor: Colors.green);
       Get.to(() => HomePage());
+      email.clear();
+      password.clear();
     } on FirebaseAuthException catch (e) {
+      Get.snackbar("Failed", "Please check you email and password",
+          colorText: Colors.white, backgroundColor: Colors.red);
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {

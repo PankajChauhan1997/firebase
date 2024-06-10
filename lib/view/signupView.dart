@@ -13,74 +13,105 @@ class SignUp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          appBar: AppBar(
-            title: Text("Flutter"),
-          ),
-          body: Column(
+        appBar: AppBar(
+          title: Text('Welcome to Sign-up'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20, left: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Sign up',
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.brown,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(child: Image.asset('assets/googleImage.png')),
+                    CircleAvatar(child: Image.asset('assets/facebook.png')),
+                    CircleAvatar(child: Image.asset('assets/tweeter.png')),
+                    CircleAvatar(child: Image.asset('assets/insta.png')),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+                    Text(' or via an Email '),
+                    Expanded(
+                        child: Divider(
+                      thickness: 2,
+                    ))
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: TextField(
                   controller: controller.idController,
                   decoration: InputDecoration(
-                    hintText: 'Email',
-                    prefixIcon: Icon(Icons.person),
-                  ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      hintText: 'Email',
+                      suffixIcon: Icon(Icons.person),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: TextField(
                   controller: controller.passController,
                   decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
                     hintText: 'Password',
-                    prefixIcon: Icon(Icons.password),
+                    suffixIcon: Icon(Icons.remove_red_eye),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   ),
-                  obscureText: true,
                 ),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
-                  controller.Signup();
+                  Get.to(logIn());
                 },
-                child: Text("Sign up"),
+                child: Text('Already have an acount?'),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Get.to(logIn());
-                    },
-                    child: Text('Sign in'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Get.to(ForgotPassword());
-                    },
-                    child: Text('Forgot password'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.Signup();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(300, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                  child: Text("Sign up"),
+                ),
               ),
             ],
-          )
-          // Obx(
-          //   () => controller.pk.value == false
-          //       ? SignUpForm(controller: controller)
-          //       : SignInForm(controller: controller),
-          // ),
           ),
+        ),
+      ),
     );
   }
 }
-
-// class SignInForm extends StatelessWidget {
-//   final SignupController controller;
-//
-//   SignInForm({required this.controller});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }
