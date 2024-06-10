@@ -6,7 +6,7 @@ import 'package:pankaj_fires/controller/locationController.dart';
 class LocationPage extends StatelessWidget {
   LocationPage({Key? key}) : super(key: key);
   final LocationController controller = Get.put(LocationController());
-  var issettelite = false.obs;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +23,7 @@ class LocationPage extends StatelessWidget {
             IconButton(
                 tooltip: 'Settelite Mode',
                 onPressed: () {
-                  issettelite.value = !issettelite.value;
+                  controller.issettelite.value = !controller.issettelite.value;
                 },
                 icon: Icon(Icons.maps_home_work_outlined))
           ],
@@ -53,12 +53,58 @@ class LocationPage extends StatelessWidget {
                     trafficEnabled: true,
                     zoomControlsEnabled: true,
                     zoomGesturesEnabled: true,
-                    mapType: issettelite == true
+                    mapType: controller.issettelite.value == true
                         ? MapType.satellite
                         : MapType.normal,
                   ),
                 ),
-                Flexible(child: Center(child: Text('Total Distance: ${20} Km')))
+                Flexible(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "  Total KM: ${controller.counter.value}",
+                            style: TextStyle(color: Colors.black, fontSize: 13),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          // Text("$speedCalculater"),
+                          Visibility(
+                            visible: !controller.isTripStated.value,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // sendPicture();
+
+                                controller.startTrip();
+                                controller.counter.value = "0.0";
+
+                                controller.fileName = "${DateTime.now()}";
+                                controller.isTripStated.value = true;
+                              },
+                              child: Text('Trip Start'),
+                            ),
+                          ),
+                          Visibility(
+                            visible: controller.isTripStated.value,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    await controller.locationSubscription
+                                        .cancel();
+
+                                    controller.isTripStated.value = false;
+                                  },
+                                  child: Text("Stop service")),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))
               ],
             );
           }

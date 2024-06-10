@@ -51,14 +51,14 @@ class HomePage extends StatelessWidget {
             ),
             actions: [
               InkWell(
-                  onTap: () {
-                    Get.to(LocationPage());
-                  },
-                  child: SvgPicture.asset(
-                    'assets/Group 916.svg',
-                    width: 40,
-                    height: 40,
-                  )),
+                onTap: () {
+                  Get.to(LocationPage());
+                },
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: Colors.blue,
+                ),
+              ),
               SizedBox(width: 10),
               SvgPicture.asset(
                 'assets/≡ƒôìTrailing icon 1.svg',
@@ -269,7 +269,7 @@ class HomePage extends StatelessWidget {
                                                       ),
                                                       TextSpan(
                                                         text:
-                                                            " penidng \n Orders from,",
+                                                            " pending \n Orders from",
                                                         style: TextStyle(
                                                             color: Colors.blue),
                                                       ),

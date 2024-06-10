@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
@@ -6,11 +8,17 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:pankaj_fires/controller/saveLocationLogs.dart';
 
 class LocationController extends GetxController {
+  late StreamSubscription<LocationData> locationSubscription;
   late GoogleMapController mapscontroller;
+  var counter = ''.obs;
+  var issettelite = false.obs;
+  var isTripStated = false.obs;
   Location location = Location();
   var latlen = <LatLng>[].obs;
+  String fileName = "Demo";
   var currentposs = CameraPosition(
           target: LatLng(
             0.0,
@@ -56,5 +64,54 @@ class LocationController extends GetxController {
 
   void mapCreated(GoogleMapController mapcontroller) {
     mapscontroller = mapcontroller;
+  }
+
+  startTrip() {
+    double? userLatitude = 0.0;
+    double? userLongitude = 0.0;
+    double totalDistance = 0.0;
+    double dataInKm = 0.0;
+    locationSubscription =
+        location.onLocationChanged.listen((LocationData currentLocation) {
+      if (userLatitude != 0.0) {
+        totalDistance += calculateDistance(userLatitude, userLongitude,
+            currentLocation.latitude, currentLocation.longitude);
+        var localList = {
+          "Latitude": currentLocation.latitude,
+          "Longitude": currentLocation.longitude,
+          "CreatedDate": "${DateTime.now()}",
+          "TotalDistance": "$totalDistance"
+        };
+        sendLogs(localList);
+        latlen
+            .add(LatLng(currentLocation.latitude!, currentLocation.longitude!));
+        for (int i = 0; i < latlen.length; i++) {
+          poly.add(Polyline(
+              polylineId: PolylineId('1'),
+              width: 2,
+              color: Colors.blue,
+              points: latlen));
+        }
+      }
+    });
+  }
+
+  Future<List?> sendLogs(var localList) async {
+    var readStoredData = [].obs;
+    var localList = [].obs;
+    try {
+      saveLogs().read(fileName).then((value) {
+        if (value != null) {
+          readStoredData = value;
+        }
+      });
+      Future.delayed(Duration(seconds: 1), () {
+        localList.add(localList);
+        readStoredData.addAll(localList);
+      });
+      saveLogs().writeCounter(json.encode(readStoredData), fileName);
+    } catch (e) {
+      print('errrrrroooooooooor.....${e}');
+    }
   }
 }
