@@ -4,36 +4,12 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:pankaj_fires/view/locationView.dart';
-
+import '../controller/customerDataController.dart';
 import '../controller/homeController.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'customerDataView.dart';
 
 class HomePage extends StatelessWidget {
   HomeController controller = Get.put(HomeController());
-  final TextEditingController dateController = TextEditingController();
-  final Rx<DateTime> selectedDate = DateTime.now().obs;
-
-  void selectDate(DateTime date) {
-    dateController.text = DateFormat('MMMM dd yyyy').format(date);
-    selectedDate.value = date;
-  }
-
-  String _getDayOfWeek(DateTime date) {
-    List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days[date.weekday - 1];
-  }
-
-  var dropdownValue = 'Timeline'.obs;
-
-  void updateValue(String newValue) {
-    dropdownValue.value = newValue;
-  }
-
-  int _getLastDayOfMonth() {
-    DateTime now = DateTime.now();
-    DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
-    return lastDayOfMonth.day;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,20 +27,25 @@ class HomePage extends StatelessWidget {
               },
             ),
             actions: [
-              InkWell(
-                onTap: () {
-                  Get.to(LocationPage());
-                },
-                child: Icon(
-                  Icons.location_on_outlined,
-                  color: Colors.blue,
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     Get.to(LocationPage());
+              //   },
+              //   child: Icon(
+              //     Icons.location_on_outlined,
+              //     color: Colors.blue,
+              //   ),
+              // ),
               SizedBox(width: 10),
-              SvgPicture.asset(
-                'assets/≡ƒôìTrailing icon 1.svg',
-                width: 40,
-                height: 40,
+              InkWell(
+                child: SvgPicture.asset(
+                  'assets/≡ƒôìTrailing icon 1.svg',
+                  width: 40,
+                  height: 40,
+                ),
+                onTap: () {
+                  Get.to(customerData());
+                },
               ),
               SizedBox(width: 10),
               Flexible(
@@ -823,7 +804,7 @@ class HomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextField(
-                            controller: dateController,
+                            controller: controller.dateController,
                             readOnly: true,
                             decoration: InputDecoration(
                               hintText:
@@ -846,10 +827,10 @@ class HomePage extends StatelessWidget {
                     Obx(() {
                       // Use Obx to update the DropdownButton when the state changes
                       return DropdownButton<String>(
-                        value: dropdownValue.value,
+                        value: controller.dropdownValue.value,
                         onChanged: (String? newValue) {
                           if (newValue != null) {
-                            updateValue(newValue);
+                            controller.updateValue(newValue);
                           }
                         },
                         items: <String>[
@@ -893,7 +874,7 @@ class HomePage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      for (int i = 1; i <= _getLastDayOfMonth(); i++)
+                      for (int i = 1; i <= controller.getLastDayOfMonth(); i++)
                         GestureDetector(
                           onTap: () {
                             DateTime selectedDate = DateTime(
@@ -901,7 +882,7 @@ class HomePage extends StatelessWidget {
                               DateTime.now().month,
                               i,
                             );
-                            selectDate(selectedDate);
+                            controller.selectDate(selectedDate);
                           },
                           child: Obx(
                             () => Card(
@@ -911,7 +892,7 @@ class HomePage extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     Text(
-                                      _getDayOfWeek(DateTime(
+                                      controller.getDayOfWeek(DateTime(
                                         DateTime.now().year,
                                         DateTime.now().month,
                                         i,
@@ -919,7 +900,9 @@ class HomePage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
-                                        color: selectedDate.value.day == i
+                                        color: controller
+                                                    .selectedDate.value.day ==
+                                                i
                                             ? Colors
                                                 .black // Dark color for selected date
                                             : Colors
@@ -931,7 +914,9 @@ class HomePage extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
-                                        color: selectedDate.value.day == i
+                                        color: controller
+                                                    .selectedDate.value.day ==
+                                                i
                                             ? Colors
                                                 .black // Dark color for selected date
                                             : Colors
@@ -939,7 +924,7 @@ class HomePage extends StatelessWidget {
                                       ),
                                     ),
                                     SizedBox(height: 10.0),
-                                    if (selectedDate.value.day == i)
+                                    if (controller.selectedDate.value.day == i)
                                       Container(
                                         width: 5,
                                         height: 5,
@@ -1014,29 +999,53 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/Group 910.svg'),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/Group 912.svg'),
-                label: 'Customer',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/Group 913.svg'),
-                label: 'Khata',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/Group 914.svg'),
-                label: 'Orders',
-              ),
-            ],
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-          ),
+          bottomNavigationBar: Obx(() => BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset('assets/Group 910.svg'),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset('assets/Group 912.svg'),
+                    label: 'Customer',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset('assets/Group 913.svg'),
+                    label: 'Khata',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.location_on_outlined,
+                      color: Colors.blue,
+                    ),
+                    label: 'Location',
+                  ),
+                ],
+                selectedItemColor: Colors.blue,
+                unselectedItemColor: Colors.grey,
+                currentIndex: controller.selectedIndex
+                    .value, // Assuming you have a variable to track the current index
+                onTap: (int index) {
+                  // Update the current index variable in the controller
+                  controller.changeIndex(index);
+                  // Handle navigation or action based on the selected index
+                  switch (index) {
+                    case 0:
+                      Get.to(() => HomePage());
+                      break;
+                    case 1:
+                      Get.to(() => customerDataPage());
+                      break;
+                    case 2:
+                      // Handle Khata navigation or action
+                      break;
+                    case 3:
+                      Get.to(() => LocationPage());
+                      break;
+                  }
+                },
+              )),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: ClipRRect(
@@ -1053,71 +1062,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
           )),
-    );
-  }
-}
-
-class AppDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<PackageInfo>(
-      future: PackageInfo.fromPlatform(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading version'));
-        } else {
-          final packageInfo = snapshot.data;
-          final version = packageInfo?.version ?? 'Unknown version';
-          return Drawer(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      DrawerHeader(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/pocket_hrms_main_logo.png'))),
-                        child: Text(''),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.home),
-                        title: Text('Home'),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.person),
-                        title: Text('Profile'),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Version: $version'),
-                ),
-              ],
-            ),
-          );
-        }
-      },
     );
   }
 }

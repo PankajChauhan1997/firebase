@@ -79,12 +79,14 @@ class logIn extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                         onPressed: () {
+                          CircularProgressIndicator();
                           Get.to(ForgotPassword());
                         },
                         child: Text("Forgot Password")),
                   ),
                   ElevatedButton(
                       onPressed: () {
+                        CircularProgressIndicator();
                         controller.signIn();
                       },
                       style: ElevatedButton.styleFrom(
@@ -140,6 +142,7 @@ class logIn extends StatelessWidget {
                   ),
                   TextButton(
                       onPressed: () {
+                        CircularProgressIndicator();
                         Get.to(() => SignUp());
                       },
                       child: Text("Don't have an account?"))
