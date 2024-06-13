@@ -11,7 +11,6 @@ class SignupController extends GetxController {
 
   @override
   void onInit() {
-    // checkAuthState();
     super.onInit();
     checkAuthState();
   }
@@ -20,7 +19,17 @@ class SignupController extends GetxController {
     try {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
-          Get.to(() => HomePage());
+          if (user.emailVerified) {
+            Get.to(() => HomePage());
+          } else {
+            Get.snackbar(
+              "Verification Required",
+              "Please verify your email to continue.",
+              colorText: Colors.white,
+              backgroundColor: Colors.red,
+            );
+            Get.to(() => logIn());
+          }
         } else {
           Get.to(() => logIn());
         }
@@ -42,18 +51,27 @@ class SignupController extends GetxController {
           .createUserWithEmailAndPassword(
               email: idController.text, password: passController.text);
       User? user = signup.user;
-      if (user != null && user.emailVerified) {
-        checkAuthState();
-        Get.to(() => logIn());
-      } else {
-        user?.sendEmailVerification();
+      if (user != null) {
+        user.sendEmailVerification();
         Get.snackbar(
-            "Success", "Please verify account,Verification email has been sent",
-            colorText: Colors.white, backgroundColor: Colors.green);
-        Get.to(() => logIn());
+          "Success",
+          "Please verify your account. Verification email has been sent.",
+          colorText: Colors.white,
+          backgroundColor: Colors.green,
+        );
         idController.clear();
         passController.clear();
+        Get.to(() => logIn());
       }
+      // else {
+      //   user?.sendEmailVerification();
+      //   Get.snackbar(
+      //       "Success", "Please verify account,Verification email has been sent",
+      //       colorText: Colors.white, backgroundColor: Colors.green);
+      //   Get.to(() => logIn());
+      //   idController.clear();
+      //   passController.clear();
+      // }
     } catch (e) {
       print("Error occured while signup  ${e}");
       Get.snackbar(

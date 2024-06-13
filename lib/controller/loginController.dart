@@ -20,16 +20,30 @@ class loginController extends GetxController {
             colorText: Colors.white, backgroundColor: Colors.red);
         return;
       }
-      UserCredential signIn = await FirebaseAuth.instance
+      UserCredential login = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: email.text, password: password.text);
-      Get.snackbar("Success", "User signed in successfully",
-          colorText: Colors.white, backgroundColor: Colors.green);
-      Get.to(() => HomePage());
-      email.clear();
-      password.clear();
+      // Get.snackbar("Success", "User signed in successfully",
+      //     colorText: Colors.white, backgroundColor: Colors.green);
+      // Get.to(() => HomePage());
+
+      User? user = login.user;
+      if (user != null && user.emailVerified) {
+        Get.snackbar("Success", "User signed in successfully",
+            colorText: Colors.white, backgroundColor: Colors.green);
+        Get.to(() => HomePage());
+        email.clear();
+        password.clear();
+      } else {
+        Get.snackbar(
+          "Verification Required",
+          "Please verify your email to continue.",
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      Get.snackbar("Failed", "Please check you email and password",
+      Get.snackbar("Failed", "$e",
           colorText: Colors.white, backgroundColor: Colors.red);
       if (e.code == 'user-not-found') {
         print('No user found for that email.');

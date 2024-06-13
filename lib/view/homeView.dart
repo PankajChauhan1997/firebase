@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pankaj_fires/view/locationView.dart';
 
 import '../controller/homeController.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatelessWidget {
   HomeController controller = Get.put(HomeController());
@@ -41,13 +42,13 @@ class HomePage extends StatelessWidget {
       home: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: SvgPicture.asset(
-                'assets/≡ƒôì Leading Icon l Use High Emphasis.svg',
-                width: 30,
-                height: 30,
-              ),
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(Icons.menu, color: Colors.blue),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                );
+              },
             ),
             actions: [
               InkWell(
@@ -66,25 +67,55 @@ class HomePage extends StatelessWidget {
                 height: 40,
               ),
               SizedBox(width: 10),
-              InkWell(
-                onTap: () {
-                  Get.to(controller.signOut());
-                },
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: Text(
-                    "P",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
+              Flexible(
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          contentPadding: EdgeInsets.zero,
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: Text('Logout'),
+                                onTap: () {
+                                  controller.signOut();
+                                },
+                              ),
+                              ListTile(
+                                title: Text('Profile'),
+                                onTap: () {
+                                  Navigator.pop(context); // Close the dialog
+                                  // Add profile navigation functionality here
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey,
+                    child: Text(
+                      "P",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(
+                  width:
+                      10), // Added this to provide spacing after the last action
             ],
           ),
+          drawer: AppDrawer(),
           body: SingleChildScrollView(
             child: Column(
               children: [
@@ -92,7 +123,7 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     title: Text(
-                      "Welcome, MyPocket !!",
+                      "Welcome, Pocket !!",
                       style: TextStyle(fontSize: 20),
                     ),
                     subtitle: Text("here is your dashboard..."),
@@ -1022,6 +1053,71 @@ class HomePage extends StatelessWidget {
               ),
             ),
           )),
+    );
+  }
+}
+
+class AppDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error loading version'));
+        } else {
+          final packageInfo = snapshot.data;
+          final version = packageInfo?.version ?? 'Unknown version';
+          return Drawer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      DrawerHeader(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/pocket_hrms_main_logo.png'))),
+                        child: Text(''),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text('Profile'),
+                        onTap: () {},
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Version: $version'),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }
