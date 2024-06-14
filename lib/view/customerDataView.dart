@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:pankaj_fires/controller/bottomNavigationbar.dart';
 import 'package:pankaj_fires/model/customerData.dart';
 import 'package:pankaj_fires/view/homeView.dart';
 
 import '../controller/customerDataController.dart';
 
-class customerDataPage extends StatelessWidget {
+class CustomerDataPage extends StatelessWidget {
   customerData controller = Get.put(customerData());
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class customerDataPage extends StatelessWidget {
               child: Icon(Icons.arrow_back_ios)),
           title: Text('Customers data'),
         ),
+        bottomNavigationBar: BottomNavigationService.buildBottomNavigation(),
         body: Center(child: Obx(() {
           if (controller.customersList.isEmpty) {
             return CircularProgressIndicator();

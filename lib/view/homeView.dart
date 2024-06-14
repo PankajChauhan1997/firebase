@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:pankaj_fires/view/locationView.dart';
+import 'package:pankaj_fires/view/profileView.dart';
+import '../controller/bottomNavigationbar.dart';
 import '../controller/customerDataController.dart';
 import '../controller/homeController.dart';
 import 'customerDataView.dart';
@@ -999,53 +1001,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: Obx(() => BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset('assets/Group 910.svg'),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset('assets/Group 912.svg'),
-                    label: 'Customer',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: SvgPicture.asset('assets/Group 913.svg'),
-                    label: 'Khata',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.blue,
-                    ),
-                    label: 'Location',
-                  ),
-                ],
-                selectedItemColor: Colors.blue,
-                unselectedItemColor: Colors.grey,
-                currentIndex: controller.selectedIndex
-                    .value, // Assuming you have a variable to track the current index
-                onTap: (int index) {
-                  // Update the current index variable in the controller
-                  controller.changeIndex(index);
-                  // Handle navigation or action based on the selected index
-                  switch (index) {
-                    case 0:
-                      Get.to(() => HomePage());
-                      break;
-                    case 1:
-                      Get.to(() => customerDataPage());
-                      break;
-                    case 2:
-                      // Handle Khata navigation or action
-                      break;
-                    case 3:
-                      Get.to(() => LocationPage());
-                      break;
-                  }
-                },
-              )),
+          bottomNavigationBar: BottomNavigationService.buildBottomNavigation(),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: ClipRRect(

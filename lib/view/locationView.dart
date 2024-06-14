@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pankaj_fires/controller/locationController.dart';
 
+import '../controller/bottomNavigationbar.dart';
+
 class LocationPage extends StatelessWidget {
   LocationPage({Key? key}) : super(key: key);
   final LocationController controller = Get.put(LocationController());
@@ -28,6 +30,7 @@ class LocationPage extends StatelessWidget {
                 icon: Icon(Icons.maps_home_work_outlined))
           ],
         ),
+        bottomNavigationBar: BottomNavigationService.buildBottomNavigation(),
         body: Obx(() {
           if (controller.latlen.isEmpty) {
             return Center(child: CircularProgressIndicator());

@@ -9,7 +9,6 @@ import 'package:pankaj_fires/view/signupView.dart';
 import '../view/homeView.dart';
 
 class HomeController extends GetxController {
-  var selectedIndex = 0.obs;
   final TextEditingController dateController = TextEditingController();
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   Future<void> signOut() async {
@@ -37,10 +36,6 @@ class HomeController extends GetxController {
     DateTime now = DateTime.now();
     DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
     return lastDayOfMonth.day;
-  }
-
-  void changeIndex(int index) {
-    selectedIndex.value = index;
   }
 }
 

@@ -4,7 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:pankaj_fires/view/customerDataView.dart';
 import 'package:pankaj_fires/view/homeView.dart';
+import 'package:pankaj_fires/view/locationView.dart';
+import 'package:pankaj_fires/view/profileView.dart';
 import 'package:pankaj_fires/view/signupView.dart';
 
 void main() async {
