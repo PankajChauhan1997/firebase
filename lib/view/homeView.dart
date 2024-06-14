@@ -1009,9 +1009,7 @@ class HomePage extends StatelessWidget {
                 BorderRadius.circular(50.0), // Adjust the value as needed
             child: FloatingActionButton(
               backgroundColor: Color(0xFF2c3d63),
-              onPressed: () {
-                // Handle button press
-              },
+              onPressed: () {},
               child: Icon(
                 Icons.add,
                 color: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pankaj_fires/controller/signupController.dart';
@@ -14,7 +15,7 @@ class SignUp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Welcome to Sign-up'),
+          title: Text('Welcome'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -63,26 +64,88 @@ class SignUp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
                 child: TextField(
-                  controller: controller.idController,
+                  controller: controller.userNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    hintText: 'User name',
+                    suffixIcon: Icon(Icons.person),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
+                child: TextField(
+                  controller: controller.emailController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15)),
                       hintText: 'Email',
-                      suffixIcon: Icon(Icons.person),
+                      suffixIcon: Icon(Icons.email),
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
                 child: TextField(
                   controller: controller.passController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15)),
                     hintText: 'Password',
+                    suffixIcon: Icon(Icons.remove_red_eye),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
+                child: TextField(
+                  controller: controller.confpassController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    hintText: 'Confirm Password',
+                    suffixIcon: Icon(Icons.remove_red_eye),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
+                child: TextField(
+                  controller: controller.mobileController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    hintText: 'Mobile',
+                    suffixIcon: Icon(Icons.remove_red_eye),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20.0, right: 20, top: 8, bottom: 8),
+                child: TextField(
+                  controller: controller.dobController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    hintText: 'DOB',
                     suffixIcon: Icon(Icons.remove_red_eye),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -98,11 +161,22 @@ class SignUp extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    controller.Signup();
+                  onPressed: () async {
+                    CircularProgressIndicator();
+                    CollectionReference collRef =
+                        FirebaseFirestore.instance.collection('customers');
+                    collRef.add({
+                      'username': controller.userNameController.text,
+                      'email': controller.emailController.text,
+                      'password': controller.passController.text,
+                      'confirmPassword': controller.confpassController.text,
+                      'mobile': controller.mobileController.text,
+                      'dateofbirth': controller.dobController.text,
+                    });
+                    await controller.Signup();
                   },
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(300, 50),
+                      minimumSize: Size(250, 50),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15))),
                   child: Text("Sign up"),

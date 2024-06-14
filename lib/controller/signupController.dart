@@ -6,8 +6,12 @@ import 'package:pankaj_fires/view/loginView.dart';
 import '../view/homeView.dart';
 
 class SignupController extends GetxController {
-  TextEditingController idController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  TextEditingController confpassController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
 
   @override
   void onInit() {
@@ -41,15 +45,15 @@ class SignupController extends GetxController {
 
   Future<void> Signup() async {
     try {
-      if (idController.text.isEmpty || passController.text.isEmpty) {
+      if (emailController.text.isEmpty || passController.text.isEmpty) {
         print("Email and Password can not be null");
-        Get.snackbar("Failed", "Please enter both Email and Password",
+        Get.snackbar("Failed", "Please enter Email and Password",
             colorText: Colors.white, backgroundColor: Colors.red);
         return;
       }
       UserCredential signup = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: idController.text, password: passController.text);
+              email: emailController.text, password: passController.text);
       User? user = signup.user;
       if (user != null) {
         user.sendEmailVerification();
@@ -59,7 +63,7 @@ class SignupController extends GetxController {
           colorText: Colors.white,
           backgroundColor: Colors.green,
         );
-        idController.clear();
+        emailController.clear();
         passController.clear();
         Get.to(() => logIn());
       }
@@ -82,7 +86,7 @@ class SignupController extends GetxController {
 
   @override
   void dispose() {
-    idController.dispose();
+    emailController.dispose();
     passController.dispose();
     super.dispose();
   }
