@@ -14,13 +14,13 @@ class home_page extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text("QR code"),
-          actions: [
-            Switch(
-                value: controller.isDarkTheme.value,
-                onChanged: (value) {
-                  controller.toggleTheme();
-                })
-          ],
+          // actions: [
+          //   Switch(
+          //       value: controller.isDarkTheme.value,
+          //       onChanged: (value) {
+          //         controller.toggleTheme();
+          //       })
+          // ],
         ),
         body: Center(
           child: Column(
